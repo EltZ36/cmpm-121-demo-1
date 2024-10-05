@@ -14,10 +14,17 @@ app.append(header);
 let counter: number = 0;
 const button = document.createElement("button");
 button.innerHTML = "🪤";
-button.addEventListener("click", () => {
+
+function incrementCounter() {
   counter += 1;
   counterValue.innerHTML = `${counter} pieces of cheese stolen`;
-});
+}
+
+button.addEventListener("click", incrementCounter);
+
+//do the incrementation and asked brace for an example of using setInterval 
+setInterval(incrementCounter, 1000);
 
 app.append(button);
 app.append(counterValue);
+
