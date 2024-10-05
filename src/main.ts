@@ -22,9 +22,8 @@ function incrementCounter() {
 
 button.addEventListener("click", incrementCounter);
 
-//do the incrementation and asked brace for an example of using setInterval 
+//do the incrementation and asked brace for an example of using setInterval
 setInterval(incrementCounter, 1000);
 
 app.append(button);
 app.append(counterValue);
-
