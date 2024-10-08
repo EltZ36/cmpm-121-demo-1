@@ -2,6 +2,7 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 const counterValue: HTMLDivElement = document.querySelector("#counterValue")!;
+let previousTime: number = performance.now();
 
 const gameName = "My clicking game";
 document.title = gameName;
@@ -17,13 +18,24 @@ button.innerHTML = "🪤";
 
 function incrementCounter() {
   counter += 1;
-  counterValue.innerHTML = `${counter} pieces of cheese stolen`;
+  counterValue.innerHTML = `${counter.toFixed()} pieces of cheese stolen`;
+}
+
+function growCounter() {
+  const currentTime: number = performance.now();
+  const timeDifference: number = (currentTime - previousTime) / 1000;
+
+  //worked with CJ Moshy to get the growth code 
+  if (timeDifference > 1) {
+    counter += 1;
+    counterValue.innerHTML = `${counter} pieces of cheese stolen`;
+    previousTime = currentTime;
+  }
+  requestAnimationFrame(growCounter);
 }
 
 button.addEventListener("click", incrementCounter);
-
-//do the incrementation and asked brace for an example of using setInterval
-setInterval(incrementCounter, 1000);
+requestAnimationFrame(growCounter);
 
 app.append(button);
 app.append(counterValue);
