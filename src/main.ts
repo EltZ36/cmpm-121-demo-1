@@ -35,16 +35,48 @@ interface Item {
   name: string;
   cost: number;
   units: number;
-  description: string,
+  description: string;
 }
 
 const availableItems: Item[] = [
-  { name: "Some sneakers", cost: 10, units: 0.1, description: "Lets you be more silent and adds extra cool points"},
-  { name: "A big stick", cost: 100, units: 2, description: "A crude stick that allows the trap to snap the stick and not your fingers"},
-  { name: "Cheddar Chisel", cost: 1000, units: 50, description: "Lets you cut more pieces of cheese to sell (very legal)"},
-  { name: "Mousetrap Tamperer", cost: 25000, units: 200, description: "Tampers with the mousetrap but with a 10% chance to fail"},
-  { name: "Gouda Guard", cost: 55000, units: 550, description: "Protects you from mousetraps better than the tamperer."},
-  { name: "Mechanical Mice", cost: 2000000, units: 1000, description: "Mechanical mice to take the cheese and let you reap the rewards"},
+  {
+    name: "Some sneakers",
+    cost: 10,
+    units: 0.1,
+    description: "Lets you be more silent and adds extra cool points",
+  },
+  {
+    name: "A big stick",
+    cost: 100,
+    units: 2,
+    description:
+      "A crude stick that allows the trap to snap the stick and not your fingers",
+  },
+  {
+    name: "Cheddar Chisel",
+    cost: 1000,
+    units: 50,
+    description: "Lets you cut more pieces of cheese to sell (very legal)",
+  },
+  {
+    name: "Mousetrap Tamperer",
+    cost: 25000,
+    units: 200,
+    description: "Tampers with the mousetrap but with a 10% chance to fail",
+  },
+  {
+    name: "Gouda Guard",
+    cost: 55000,
+    units: 550,
+    description: "Protects you from mousetraps better than the tamperer.",
+  },
+  {
+    name: "Mechanical Mice",
+    cost: 2000000,
+    units: 1000,
+    description:
+      "Mechanical mice to take the cheese and let you reap the rewards",
+  },
 ];
 
 interface Purchase {
@@ -65,7 +97,7 @@ createUpgradeButtons();
 function createUpgradeButtons() {
   availableItems.forEach((item, index) => {
     const upgradeButton = document.createElement("button");
-    upgradeButton.innerHTML =  `${item.name} <br> ${item.description} <br> Cost: (${item.cost.toFixed(2)} piece(s) of cheese)`;
+    upgradeButton.innerHTML = `${item.name} <br> ${item.description} <br> Cost: (${item.cost.toFixed(2)} piece(s) of cheese)`;
     upgradeButton.disabled = true;
     upgradeButton.addEventListener("click", () => getUpgrade(index));
     app.append(upgradeButton);
