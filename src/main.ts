@@ -39,7 +39,7 @@ interface Item {
 
 const availableItems: Item[] = [
   { name: "Big pair of Sneakers", cost: 10, units: 0.1 },
-  { name: "Mousetrap Tamperers", cost: 100, units: 2.0 },
+  { name: "Mousetrap Tamperers", cost: 100, units: 2},
   { name: "Mechanical Mice", cost: 1000, units: 50 },
 ];
 
@@ -48,9 +48,9 @@ interface Purchase {
   purchaseCount: number;
 }
 
-const purchaseList: Purchase[] = availableItems.map(item => ({
+const purchaseList: Purchase[] = availableItems.map((item) => ({
   name: item.name,
-  purchaseCount: 0
+  purchaseCount: 0,
 }));
 
 app.append(counterValue, growthValue, purchaseValue);
