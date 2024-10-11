@@ -18,11 +18,11 @@ app.append(header);
 
 const image = document.createElement("img");
 //rat photo link https://pixabay.com/illustrations/mouse-rat-horse-riding-mouse-trap-1027582/
-image.style.width = "320px"; 
-image.style.height = "320px"; 
-image.src = "./mouse.jpg"; 
+image.style.width = "320px";
+image.style.height = "320px";
+image.src = "./mouse.jpg";
 
-app.append(image)
+app.append(image);
 
 //button code pulled from the lecture on 10/02/24 and mdn docs for addEventListener
 const clicker = document.createElement("button");
@@ -31,13 +31,13 @@ clicker.addEventListener("click", incrementCounter);
 clicker.id = "clickerButton";
 app.append(clicker);
 
-interface Upgrade {
+interface Item {
   name: string;
   cost: number;
   units: number;
 }
 
-const upgradeList: Upgrade[] = [
+const availableItems: Item[] = [
   { name: "Big pair of Sneakers", cost: 10, units: 0.1 },
   { name: "Mousetrap Tamperers", cost: 100, units: 2.0 },
   { name: "Mechanical Mice", cost: 1000, units: 50 },
@@ -48,47 +48,40 @@ interface Purchase {
   purchaseCount: number;
 }
 
-const purchaseList: Purchase[] = [
-  { name: "A", purchaseCount: 0 },
-  { name: "B", purchaseCount: 0 },
-  { name: "C", purchaseCount: 0 },
-];
+const purchaseList: Purchase[] = availableItems.map(item => ({
+  name: item.name,
+  purchaseCount: 0
+}));
 
-app.append(counterValue);
-app.append(growthValue);
-app.append(purchaseValue);
+app.append(counterValue, growthValue, purchaseValue);
 
-createUpgradeButtons(upgradeList);
+createUpgradeButtons();
 
 //makes the upgrade buttons form the upgrade list
-function createUpgradeButtons(upgradeList: Upgrade[]) {
-  for (let i = 0; i < upgradeList.length; i++) {
+function createUpgradeButtons() {
+  availableItems.forEach((item, index) => {
     const upgradeButton = document.createElement("button");
-    upgradeButton.innerHTML = `${upgradeList[i].name} \n (${upgradeList[i].cost} piece(s) of cheese)`;
+    upgradeButton.innerHTML = `${item.name} \n (${item.cost.toFixed(2)} piece(s) of cheese)`;
     upgradeButton.disabled = true;
-    upgradeButton.addEventListener("click", () => {
-      getUpgrade(upgradeList, i);
-    });
+    upgradeButton.addEventListener("click", () => getUpgrade(index));
     app.append(upgradeButton);
-  }
+  });
 }
 
-function updateUpgradeText(
-  button: HTMLButtonElement,
-  upgradeList: Upgrade[],
-  index: number,
-) {
-  button.innerHTML = `${upgradeList[index].name} \n (${upgradeList[index].cost.toFixed(2)} piece(s) of cheese)`;
+function updateUpgradeText(button: HTMLButtonElement, item: Item) {
+  button.innerHTML = `${item.name} \n (${item.cost.toFixed(2)} piece(s) of cheese)`;
 }
 
 function displayTotal() {
   counterValue.innerHTML = `${count.toFixed()} piece(s) of cheese stolen`;
   growthValue.innerHTML = `${growthRate.toFixed(1)} piece(s) of cheese/sec`;
-  canUpgrade(upgradeList);
+  canUpgrade();
 }
 
 function displayStatus() {
-  purchaseValue.innerHTML = `Big pair of sneakers: ${purchaseList[0].purchaseCount} <br> Mousetrap tamperers: ${purchaseList[1].purchaseCount} <br> Mechanical Mice: ${purchaseList[2].purchaseCount}`;
+  purchaseValue.innerHTML = availableItems
+    .map((item, index) => `${item.name}: ${purchaseList[index].purchaseCount}`)
+    .join("<br>");
 }
 
 function incrementCounter() {
@@ -101,7 +94,6 @@ function growCounter() {
   const currentTime: number = performance.now();
   const timeDifference: number = (currentTime - previousTime) / 1000;
 
-  //worked with CJ Moshy to get the growth code
   if (timeDifference > 1) {
     count += growthRate;
     displayTotal();
@@ -110,11 +102,13 @@ function growCounter() {
   requestAnimationFrame(growCounter);
 }
 
-function getUpgrade(upgradeList: Upgrade[], index: number) {
-  if (count >= upgradeList[index].cost) {
-    count -= upgradeList[index].cost;
-    growthRate += upgradeList[index].units;
-    upgradeList[index].cost = upgradeList[index].cost * 1.15;
+function getUpgrade(index: number) {
+  //worked with CJ Moshy to get the growth code
+  const item = availableItems[index];
+  if (count >= item.cost) {
+    count -= item.cost;
+    growthRate += item.units;
+    item.cost *= 1.15;
     purchaseList[index].purchaseCount += 1;
     displayTotal();
     displayStatus();
@@ -122,10 +116,12 @@ function getUpgrade(upgradeList: Upgrade[], index: number) {
   }
 }
 
-function canUpgrade(upgradeList: Upgrade[]) {
-  for (let i = 0; i < upgradeList.length; i++) {
-    const upgradeButton = app.querySelectorAll("button")[1 + i];
-    upgradeButton.disabled = count < upgradeList[i].cost;
-    updateUpgradeText(upgradeButton, upgradeList, i);
-  }
+function canUpgrade() {
+  app.querySelectorAll<HTMLButtonElement>("button").forEach((button, index) => {
+    if (index > 0 && index <= availableItems.length) {
+      const item = availableItems[index - 1]; // Adjust index to skip clicker button
+      button.disabled = count < item.cost;
+      updateUpgradeText(button, item);
+    }
+  });
 }
