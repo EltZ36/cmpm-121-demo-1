@@ -20,8 +20,7 @@ const image = document.createElement("img");
 //rat photo link https://pixabay.com/illustrations/mouse-rat-horse-riding-mouse-trap-1027582/
 image.style.width = "320px";
 image.style.height = "320px";
-image.src = "./mouse.jpg";
-
+image.src = "https://cdn.pixabay.com/photo/2015/11/06/13/12/mouse-1027582_1280.jpg";
 app.append(image);
 
 //button code pulled from the lecture on 10/02/24 and mdn docs for addEventListener
