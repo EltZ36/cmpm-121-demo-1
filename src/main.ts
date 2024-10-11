@@ -2,10 +2,12 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 const counterValue: HTMLDivElement = document.querySelector("#counterValue")!;
+const growthValue: HTMLDivElement = document.querySelector("#growthValue")!;
+const purchaseValue: HTMLDivElement = document.querySelector("#purchaseValue")!;
+
 let previousTime: number = performance.now();
-//growth rate of the counter that goes up as it continues
-let growthRate: number = 0; 
 let count: number = 0;
+let growthRate: number = 0;
 
 const gameName = "My clicking game";
 document.title = gameName;
@@ -20,55 +22,93 @@ button.innerHTML = "🪤";
 button.addEventListener("click", incrementCounter);
 app.append(button);
 
-//button that upgrades with the increasing growth rate each purchase. 
-const upgradeButton = document.createElement("button");
-upgradeButton.innerHTML = "Purchase an Upgrade"
-upgradeButton.disabled = true;
-upgradeButton.addEventListener("click", getUpgrade);
-app.append(upgradeButton); 
-
-app.append(counterValue);
-
-function displayTotal(){
-  counterValue.innerHTML = `${count} pieces of cheese stolen`;
+type Upgrade = {
+  name: string; 
+  cost: number; 
+  units: number; 
 }
 
+const upgradeList: Upgrade[] = [
+  {name: "A", cost: 10, units: 0.1},
+  {name: "B", cost: 100, units: 2.0}, 
+  {name: "C", cost: 1000, units: 50}
+]
+
+type Purchase = {
+  name: string;
+  purchaseCount: number;
+}
+
+const purchaseList: Purchase[] = [
+  {name: "A", purchaseCount: 0},
+  {name: "B", purchaseCount: 0},
+  {name: "C", purchaseCount: 0}
+]
+
+
+app.append(counterValue);
+app.append(growthValue);
+app.append(purchaseValue);
+
+createUpgradeButtons(upgradeList);
+
+//makes the upgrade buttons form the upgrade list
+function createUpgradeButtons(upgradeList: Upgrade[]){
+  for(let i = 0; i < upgradeList.length; i++){
+    const upgradeButton = document.createElement("button");
+    upgradeButton.innerHTML = `Upgrade ${upgradeList[i].name} \n (${upgradeList[i].cost} pieces of cheese)`;
+    upgradeButton.disabled = true;
+    upgradeButton.addEventListener("click", () => {getUpgrade(upgradeList, i)});
+    app.append(upgradeButton);
+  }
+}
+
+function displayTotal() {
+  counterValue.innerHTML = `${count.toFixed()} pieces of cheese stolen`;
+  growthValue.innerHTML = `${growthRate} pieces of cheese/sec`
+  canUpgrade(upgradeList);
+}
+
+function displayStatus() {
+  purchaseValue.innerHTML = `Purchase A: ${purchaseList[0].purchaseCount} <br> Purchase B: ${purchaseList[1].purchaseCount} <br> Purchase C: ${purchaseList[2].purchaseCount}`
+}
 
 function incrementCounter() {
   count += 1;
-  canUpgradeButton(); 
-  displayTotal(); 
+  displayTotal();
 }
 
 function growCounter() {
   const currentTime: number = performance.now();
   const timeDifference: number = (currentTime - previousTime) / 1000;
 
-  //worked with CJ Moshy to get the growth code 
+  //worked with CJ Moshy to get the growth code
   if (timeDifference > 1) {
     count += growthRate;
     displayTotal();
-    canUpgradeButton();
     previousTime = currentTime;
   }
   requestAnimationFrame(growCounter);
 }
 
-function getUpgrade() {
-  if(count >= 10){
-    count -= 10; 
-    growthRate += 1;
-    canUpgradeButton();
+function getUpgrade(upgradeList: Upgrade[], index: number) {
+  if (count >= upgradeList[index].cost) {
+    count -= upgradeList[index].cost;
+    growthRate += upgradeList[index].units;
+    purchaseList[index].purchaseCount += 1;
+    displayTotal();
+    displayStatus();
     requestAnimationFrame(growCounter);
   }
 }
 
-function canUpgradeButton(){
-  if(count < 10){
-    upgradeButton.disabled = true; 
-  }
-  else{
-    upgradeButton.disabled = false; 
+function canUpgrade(upgradeList: Upgrade[]) {
+  for(let i = 0; i < upgradeList.length; i++){
+      const upgradeButton = app.querySelectorAll("button")[1 + i];
+      upgradeButton.disabled = count < upgradeList[i].cost;
   }
 }
+
+
+
 
