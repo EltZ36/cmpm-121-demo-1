@@ -1,9 +1,13 @@
 import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
-const counterValue: HTMLDivElement = document.querySelector("#counterValue")!;
-const growthValue: HTMLDivElement = document.querySelector("#growthValue")!;
-const purchaseValue: HTMLDivElement = document.querySelector("#purchaseValue")!;
+
+const counterValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+counterValue.id = "counterValue";
+const growthValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+growthValue.id = "growthValue";
+const purchaseValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+purchaseValue.id = "purchaseValue";
 
 let previousTime: number = performance.now();
 let count: number = 0;
