@@ -22,29 +22,28 @@ button.innerHTML = "🪤";
 button.addEventListener("click", incrementCounter);
 app.append(button);
 
-type Upgrade = {
-  name: string; 
-  cost: number; 
-  units: number; 
-}
+interface Upgrade{
+  name: string;
+  cost: number;
+  units: number;
+};
 
 const upgradeList: Upgrade[] = [
-  {name: "A", cost: 10, units: 0.1},
-  {name: "B", cost: 100, units: 2.0}, 
-  {name: "C", cost: 1000, units: 50}
-]
+  { name: "A", cost: 10, units: 0.1 },
+  { name: "B", cost: 100, units: 2.0 },
+  { name: "C", cost: 1000, units: 50 },
+];
 
-type Purchase = {
+interface Purchase{
   name: string;
   purchaseCount: number;
-}
+};
 
 const purchaseList: Purchase[] = [
-  {name: "A", purchaseCount: 0},
-  {name: "B", purchaseCount: 0},
-  {name: "C", purchaseCount: 0}
-]
-
+  { name: "A", purchaseCount: 0 },
+  { name: "B", purchaseCount: 0 },
+  { name: "C", purchaseCount: 0 },
+];
 
 app.append(counterValue);
 app.append(growthValue);
@@ -53,29 +52,32 @@ app.append(purchaseValue);
 createUpgradeButtons(upgradeList);
 
 //makes the upgrade buttons form the upgrade list
-function createUpgradeButtons(upgradeList: Upgrade[]){
-  for(let i = 0; i < upgradeList.length; i++){
+function createUpgradeButtons(upgradeList: Upgrade[]) {
+  for (let i = 0; i < upgradeList.length; i++) {
     const upgradeButton = document.createElement("button");
-    upgradeButton.innerHTML = `Upgrade ${upgradeList[i].name} \n (${upgradeList[i].cost} pieces of cheese)`;
+    upgradeButton.innerHTML = `Upgrade ${upgradeList[i].name} \n (${upgradeList[i].cost} piece(s) of cheese)`;
     upgradeButton.disabled = true;
-    upgradeButton.addEventListener("click", () => {getUpgrade(upgradeList, i)});
+    upgradeButton.addEventListener("click", () => {
+      getUpgrade(upgradeList, i);
+    });
     app.append(upgradeButton);
   }
 }
 
 function displayTotal() {
-  counterValue.innerHTML = `${count.toFixed()} pieces of cheese stolen`;
-  growthValue.innerHTML = `${growthRate} pieces of cheese/sec`
+  counterValue.innerHTML = `${count.toFixed()} piece(s) of cheese stolen`;
+  growthValue.innerHTML = `${growthRate.toFixed(1)} piece(s) of cheese/sec`;
   canUpgrade(upgradeList);
 }
 
 function displayStatus() {
-  purchaseValue.innerHTML = `Purchase A: ${purchaseList[0].purchaseCount} <br> Purchase B: ${purchaseList[1].purchaseCount} <br> Purchase C: ${purchaseList[2].purchaseCount}`
+  purchaseValue.innerHTML = `Purchase A: ${purchaseList[0].purchaseCount} <br> Purchase B: ${purchaseList[1].purchaseCount} <br> Purchase C: ${purchaseList[2].purchaseCount}`;
 }
 
 function incrementCounter() {
   count += 1;
   displayTotal();
+  displayStatus();
 }
 
 function growCounter() {
@@ -103,12 +105,8 @@ function getUpgrade(upgradeList: Upgrade[], index: number) {
 }
 
 function canUpgrade(upgradeList: Upgrade[]) {
-  for(let i = 0; i < upgradeList.length; i++){
-      const upgradeButton = app.querySelectorAll("button")[1 + i];
-      upgradeButton.disabled = count < upgradeList[i].cost;
+  for (let i = 0; i < upgradeList.length; i++) {
+    const upgradeButton = app.querySelectorAll("button")[1 + i];
+    upgradeButton.disabled = count < upgradeList[i].cost;
   }
 }
-
-
-
-
