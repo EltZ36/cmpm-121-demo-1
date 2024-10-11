@@ -22,11 +22,11 @@ button.innerHTML = "🪤";
 button.addEventListener("click", incrementCounter);
 app.append(button);
 
-interface Upgrade{
+interface Upgrade {
   name: string;
   cost: number;
   units: number;
-};
+}
 
 const upgradeList: Upgrade[] = [
   { name: "A", cost: 10, units: 0.1 },
@@ -34,10 +34,10 @@ const upgradeList: Upgrade[] = [
   { name: "C", cost: 1000, units: 50 },
 ];
 
-interface Purchase{
+interface Purchase {
   name: string;
   purchaseCount: number;
-};
+}
 
 const purchaseList: Purchase[] = [
   { name: "A", purchaseCount: 0 },
@@ -62,6 +62,10 @@ function createUpgradeButtons(upgradeList: Upgrade[]) {
     });
     app.append(upgradeButton);
   }
+}
+
+function updateUpgradeText( button: HTMLButtonElement, upgradeList: Upgrade[], index: number){
+  button.innerHTML = `Upgrade ${upgradeList[index].name} \n (${upgradeList[index].cost.toFixed(2)} piece(s) of cheese)`;
 }
 
 function displayTotal() {
@@ -97,6 +101,7 @@ function getUpgrade(upgradeList: Upgrade[], index: number) {
   if (count >= upgradeList[index].cost) {
     count -= upgradeList[index].cost;
     growthRate += upgradeList[index].units;
+    upgradeList[index].cost = upgradeList[index].cost * 1.15; 
     purchaseList[index].purchaseCount += 1;
     displayTotal();
     displayStatus();
@@ -108,5 +113,8 @@ function canUpgrade(upgradeList: Upgrade[]) {
   for (let i = 0; i < upgradeList.length; i++) {
     const upgradeButton = app.querySelectorAll("button")[1 + i];
     upgradeButton.disabled = count < upgradeList[i].cost;
+    updateUpgradeText(upgradeButton, upgradeList, i);
   }
 }
+
+
