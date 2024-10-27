@@ -2,11 +2,17 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const counterValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+const counterValue: HTMLDivElement = document.createElement(
+  "div",
+) as HTMLDivElement;
 counterValue.id = "counterValue";
-const growthValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+const growthValue: HTMLDivElement = document.createElement(
+  "div",
+) as HTMLDivElement;
 growthValue.id = "growthValue";
-const purchaseValue: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+const purchaseValue: HTMLDivElement = document.createElement(
+  "div",
+) as HTMLDivElement;
 purchaseValue.id = "purchaseValue";
 
 let previousTime: number = performance.now();
@@ -24,7 +30,8 @@ const image = document.createElement("img");
 //rat photo link https://pixabay.com/illustrations/mouse-rat-horse-riding-mouse-trap-1027582/
 image.style.width = "320px";
 image.style.height = "320px";
-image.src = "https://cdn.pixabay.com/photo/2015/11/06/13/12/mouse-1027582_1280.jpg";
+image.src =
+  "https://cdn.pixabay.com/photo/2015/11/06/13/12/mouse-1027582_1280.jpg";
 app.append(image);
 
 //button code pulled from the lecture on 10/02/24 and mdn docs for addEventListener
@@ -96,11 +103,15 @@ app.append(counterValue, growthValue, purchaseValue);
 
 createUpgradeButtons();
 
+function generateUpgradeButtonText(item: Item): string {
+  return `${item.name} <br> ${item.description} <br> Cost: (${item.cost.toFixed(2)} piece(s) of cheese)`;
+}
+
 //makes the upgrade buttons form the upgrade list
 function createUpgradeButtons() {
   availableItems.forEach((item, index) => {
     const upgradeButton = document.createElement("button");
-    upgradeButton.innerHTML = `${item.name} <br> ${item.description} <br> Cost: (${item.cost.toFixed(2)} piece(s) of cheese)`;
+    upgradeButton.innerHTML = generateUpgradeButtonText(item);
     upgradeButton.disabled = true;
     upgradeButton.addEventListener("click", () => getUpgrade(index));
     app.append(upgradeButton);
@@ -108,7 +119,7 @@ function createUpgradeButtons() {
 }
 
 function updateUpgradeText(button: HTMLButtonElement, item: Item) {
-  button.innerHTML = `${item.name} <br> ${item.description} <br> Cost: (${item.cost.toFixed(2)} piece(s) of cheese)`;
+  button.innerHTML = generateUpgradeButtonText(item);
 }
 
 function displayTotal() {
@@ -118,8 +129,24 @@ function displayTotal() {
 }
 
 function displayStatus() {
-  purchaseValue.innerHTML = availableItems
-    .map((item, index) => `${item.name}: ${purchaseList[index].purchaseCount}`)
+  purchaseValue.innerHTML = generatePurchaseListText(
+    availableItems,
+    purchaseList,
+  );
+}
+
+function formatPurchase(item: Item, purchaseCount: number): string {
+  return `${item.name}: ${purchaseCount}`;
+}
+
+function generatePurchaseListText(
+  availableItems: Item[],
+  purchaseList: Purchase[],
+): string {
+  return availableItems
+    .map((item, index) =>
+      formatPurchase(item, purchaseList[index].purchaseCount),
+    )
     .join("<br>");
 }
 
@@ -144,10 +171,11 @@ function growCounter() {
 function getUpgrade(index: number) {
   //worked with CJ Moshy to get the growth code
   const item = availableItems[index];
+  const growthFactor: number = 1.15;
   if (count >= item.cost) {
     count -= item.cost;
     growthRate += item.units;
-    item.cost *= 1.15;
+    item.cost *= growthFactor;
     purchaseList[index].purchaseCount += 1;
     displayTotal();
     displayStatus();
