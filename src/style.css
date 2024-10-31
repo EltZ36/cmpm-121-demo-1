@@ -53,6 +53,38 @@ h1 {
   margin: 15px auto; /* Centers the button under the image and adds space */
 }
 
+#hoverDescription {
+  position: absolute;
+  background-color: #fbdb65;
+}
+
+/*code for this transition comes from https://github.com/maozblan/cmpm-121-demo-1/ lines 25 to 27 of styles.css
+and the keyframes for cheeseMovement are from lines 30 to 43 of styles.css*/
+.cheese {
+  animation: cheeseMovement 1s linear forwards;
+  position: absolute;
+  pointer-events: none;
+}
+
+@keyframes cheeseMovement {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px);
+  }
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
